@@ -1,3 +1,4 @@
+from doctest import master
 import os
 from tkinter import *
 from tkinter import messagebox
@@ -59,9 +60,9 @@ class gui():
             fg='black',)
         self.lbl_intro.grid(row=0,columnspan=gui.cols,padx=10,pady=10)
         
-    #def buttonWidgets(self):
-    #    # Parent widget for the buttons
-    #    self.buttons_frame = Frame(self.masterWindow)
+    def buttonWidgets(self):
+        # Parent widget for the buttons
+        self.buttons_frame = Frame(master=self.masterWindow)
         
 
 if __name__ == "__main__":
