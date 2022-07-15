@@ -8,9 +8,6 @@ import datetime
 class gui():
     # static class variable of the background color
     bgColor = "#34A2FE"
-    # static variables to change grid size in window depending on next changes
-    cols = 3
-    rows = 3
 
     def __init__(self):
         self.masterWindow = tk.Tk() # create the tkinder object 
