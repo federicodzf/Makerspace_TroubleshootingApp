@@ -1,4 +1,3 @@
-from doctest import master
 import os
 from tkinter import *
 from tkinter import messagebox
@@ -31,7 +30,7 @@ class gui():
         self.masterWindow.mainloop()
  
     def addExitButton(self):
-        # create exit btn frame
+        # create exit btn frameconda 
         self.exitBtnFrame = tk.Frame(self.masterWindow,bg="red")
         self.exitBtnFrame.grid(row=gui.rows-1,columnspan=gui.cols,sticky="se",padx=10,pady=10)
         # Exit button 
@@ -46,7 +45,6 @@ class gui():
     def createTextFrame(self,msg):
         self.txtFrame = tk.Frame(
             master=self.masterWindow,
-            width=500,
             height=100,
             bg=gui.bgColor)
         self.txtFrame.grid(row=0,columnspan=10,sticky='n')
@@ -57,12 +55,23 @@ class gui():
             anchor='w',
             text=msg,
             font=(100),
-            fg='black',)
+            fg='black')
         self.lbl_intro.grid(row=0,columnspan=gui.cols,padx=10,pady=10)
         
-    def buttonWidgets(self):
+    def yesButtonWidget(self,question):
         # Parent widget for the buttons
-        self.buttons_frame = Frame(master=self.masterWindow)
+        self.buttons_frame = Frame(
+            master=self.masterWindow,
+            height=200,
+            bg="yellow")
+        self.yesBtn = tk.Button(
+            master=self.buttons_frame,
+            text=question,
+            fg="black",
+            anchor=CENTER,
+            padx=10,pady=10)
+        self
+
         
 
 if __name__ == "__main__":
