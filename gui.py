@@ -29,13 +29,13 @@ class gui():
         self.createButtonFrame()
         self.addYesNoButtons()
         
-
-        # dictionary that holds the questions and the respective function mappings
-        #self.stages = {"Printer connected?": gui.isPrinterNotConnected(),
-        #               "Turns on?": gui.turnsOn(), 
-        #               "Is filament inserted?": gui.isFilamentInserted,
-        #               "Is bed dirty?": gui.cleanBed(),
-        #               "Purging?": gui.purge()}
+        # dictionary to access and then move to respective stage depending on Question on current frame
+        self.questions = {"Initial Status": "Does the printer turn on?",
+                          "Connection": "Is Printer connected?",
+                          "New status": "Turns on?", 
+                          "Filament": "Is filament inserted?",
+                          "Bed": "Is bed dirty?",
+                          "Purge": "Purging?"}
         
  
     def addExitButton(self):
@@ -103,17 +103,53 @@ class gui():
         for widget in frame.winfo_children():
             widget.destroy()
     
-    def printerNotConnected(self):
-        # Clear button frame
-        self.clearFrame(self.buttons_frame)
-        # Clear the text frame to ask new question
-        self.clearFrame(self.txtFrame)
-        #Ask new question
-        self.addQuestion("Is the printer connected?")
-        self.addYesNoButtons()
+    #def printerNotConnected(self):
+    #    # Clear button frame
+    #    self.clearFrame(self.buttons_frame)
+    #    # Clear the text frame to ask new question
+    #    self.clearFrame(self.txtFrame)
+    #    #Ask new question
+    #    self.addQuestion("Is the printer connected?")
+    #    self.addYesNoButtons()
+    
+    # Method that holds all the stages of teh flowchart after clicking Yes in conditionals
+    def yesStages(self):
+        question = self.txtFrame.cget("text")
+        if (question == self.questions.get("Initial Status") or question == self.questions.get("New status")):
+            # Go to information after printer is connected or it turns on
+            self.runSelfTests() # need to create
+        elif (question == self.questions.get("Connection")):
+            # Go to information that shows screen connections
+            self.connectScreen() # need to create
+        elif (question == self.questions.get("Filament")):
+            # Go to information that goes after filament IS inserted
+            self.purgeFilament()
+        elif (question == self.questions.get("Bed")):
+            # instruct to clean bed 
+            # Then recheck filament information 
+            self.purgeFilament()
+        elif (question == self.questions.get("Purge")):
+            # Go to information that goes after printer turns on
+            self.layerCalibration()
         
-    def checkYesStage(self):
-        count = 1
+    def noStages(self):
+        question = self.txtFrame.cget("text")
+        if (question == self.questions.get("Initial Status") or question == self.questions.get("New status")):
+            # Go to information after printer is connected or it turns on
+            self.printerNotConnected() # need to create
+        elif (question == self.questions.get("Connection")):
+            # Go to information that shows screen connections
+            self.connectScreen()
+            # Instruct to retry and come back if necessary
+        elif (question == self.questions.get("Filament")):
+            # Go to information that goes after filament IS NOT inserted
+            self.insertFilament()
+            # Go to purging
+        elif (question == self.questions.get("Purge")):
+            # Clean or replace hotend
+            self.extruder_HotendIssues()
+        else:
+            return
 
 
 if __name__ == "__main__":
