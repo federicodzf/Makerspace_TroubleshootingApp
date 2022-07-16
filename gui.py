@@ -18,7 +18,13 @@ class gui():
         # Set standard size of window
         self.masterWindow.geometry("500x500+400+250")
         self.masterWindow.configure(bg=gui.bgColor)
-
+         # dictionary to access and then move to respective stage depending on Question on current frame
+        self.questions = {"Initial Status": "Does the printer turn on?",
+                          "Connection": "Is Printer connected?",
+                          "New status": "Turns on?", 
+                          "Filament": "Is filament inserted?",
+                          "Bed": "Is bed dirty?",
+                          "Purge": "Purging?"}
         # Add Exit button
         self.addExitButton()
         # Add text frame
@@ -29,13 +35,7 @@ class gui():
         self.createButtonFrame()
         self.addYesNoButtons()
         
-        # dictionary to access and then move to respective stage depending on Question on current frame
-        self.questions = {"Initial Status": "Does the printer turn on?",
-                          "Connection": "Is Printer connected?",
-                          "New status": "Turns on?", 
-                          "Filament": "Is filament inserted?",
-                          "Bed": "Is bed dirty?",
-                          "Purge": "Purging?"}
+        
         
  
     def addExitButton(self):
@@ -117,10 +117,10 @@ class gui():
         question = self.txtFrame.cget("text")
         if (question == self.questions.get("Initial Status") or question == self.questions.get("New status")):
             # Go to information after printer is connected or it turns on
-            self.runSelfTests() # need to create
+            self.runSelfTests()
         elif (question == self.questions.get("Connection")):
             # Go to information that shows screen connections
-            self.connectScreen() # need to create
+            self.connectScreen() 
         elif (question == self.questions.get("Filament")):
             # Go to information that goes after filament IS inserted
             self.purgeFilament()
