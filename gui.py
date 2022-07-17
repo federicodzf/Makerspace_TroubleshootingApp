@@ -78,21 +78,23 @@ class gui():
             bg=gui.bgColor)
         self.buttons_frame.pack(fill=BOTH)
 
+    # Method that adds Yes/No buttons to frame. Parameters are the corresponding stages of the troubleshooting guide
+    # depending on whether yes or no was clicked. 
     def addYesNoButtons(self,nextYesStage):
         # Add Yes button to frame
         self.yesBtn = tk.Button(
-            master=self.buttons_frame,
-            text="Yes",
-            fg="black",
+            master= self.buttons_frame,
+            text= "Yes",
+            fg= "black",
             bg='green',
-            anchor=CENTER,
-            command=nextYesStage) # Need to properly check instance of troubleshooting to see next step
+            anchor= CENTER,
+            command= nextYesStage) # Need to properly check instance of troubleshooting to see next step
         self.yesBtn.pack(side=LEFT,fill=BOTH,ipadx=10, ipady=10, padx=10, pady=10)
         # Add No button to frame
         self.noBtn = tk.Button(
-            master=self.buttons_frame,
-            text="No",
-            fg="black",
+            master= self.buttons_frame,
+            text= "No",
+            fg= "black",
             anchor=CENTER,
             ) # Need to properly check instance of troubleshooting to see next step 
         self.noBtn.pack(side=RIGHT,fill=BOTH,ipadx=10, ipady=10, padx=10, pady=10)
