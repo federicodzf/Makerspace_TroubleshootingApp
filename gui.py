@@ -63,7 +63,7 @@ class gui():
         # Create message
         self.label = tk.Label(
             master=self.txtFrame,
-            anchor='w',
+            anchor=CENTER,
             text=msg,
             font=(120),
             fg=color,
@@ -233,7 +233,7 @@ class gui():
         # Instruct user to purge filament
         self.addQuestion("""TO DO:
                          \nClean extruder gears (where filament is inserted):
-                         \n Unscrew extruder motor and its covers to clean with a metal brush.\n""", 'yellow')
+                         \nUnscrew extruder motor and its covers to clean with a metal brush.\n""", 'yellow')
         self.addQuestion("""NEXT:
                          \nCleaning or Replacing Hotend: 
                          \nThis process is one of teh most demanding and tedious.
@@ -269,9 +269,9 @@ class gui():
         self.buttons_frame.destroy()
         # Instruct user to purge filament
         self.addQuestion("""This guide covered basic 3D printer maintenance.
-                         \nIf you are yet unable to figure out and/or fix the issue:
-                         \nRefer to Prusa Mini troubleshooting guide for more in depth printer issues and/or 
-                         \nfixing the printer has become stagnant.\n""", 'yellow')
+                     \nIf you are yet unable to figure out and/or fix the issue:
+                     \nGo to Prusa Mini troubleshooting guide for more in-depth 
+                     \nprinter issues and/or if fixing the printer has become stagnant.\n""", 'yellow')
         qrCode_guide = tk.PhotoImage(file="prusaMini_helpguide.png")
         self.hotend_qrCode = tk.Label(master=self.txtFrame, image= qrCode_guide, anchor= CENTER)
         self.hotend_qrCode.pack()
