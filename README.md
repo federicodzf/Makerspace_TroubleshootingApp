@@ -9,4 +9,7 @@ The draft troubleshooting flowchart can be seen below:
 ---
 The first step is to develop the UI/GUI using the tkinter python library to ask the most simple questions in order to verify functionality and user-friendliness. 
 
+Updates: Functionality has been tested => flow works as expected. Application aesthetics still need some work, as well as the addition of QR codes and hyperlinks to the Prusa Knowledge base in case of extra help or problem is too complex for the app to handle. 
+Main link for Prusa help: https://help.prusa3d.com/en/tag/mini-2/
+
 
