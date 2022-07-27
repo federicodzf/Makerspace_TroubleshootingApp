@@ -20,7 +20,7 @@ class gui():
         self.masterWindow.configure(bg=gui.bgColor)
          # dictionary to access and then move to respective stage depending on Question on current frame
         self.questions = {"Initial Status": "Does the printer turn on?",
-                          "Connection": "Is Printer connected?",
+                          "Connection": "Is Printer plugged in?",
                           "New status": "Turns on?", 
                           "Filament": "Is filament inserted?",
                           "Bed": "Is the bed dirty?",
@@ -30,11 +30,14 @@ class gui():
         # Add text frame
         self.createTextFrame()
         # Add intiial basic question text
-        self.addQuestion("Does the printer turn on?")
+        self.addQuestion("Welcome to this interactive app.", 'yellow')
+        self.addQuestion("""Does the printer turn on?
+                            \nThings to check: 
+                            \na) Fan noises? b) Screen illuminates?""")
         # Add button frame 
         self.createButtonFrame()
         # Create buttons, where parameters are the next stages in the flowchart
-        self.addYesNoButtons(self.runSelfTests,self.printerNotConnected)
+        self.addYesNoButtons(self.cleanBed(self.runSelfTests),self.printerNotOn)
         
         
     def addExitButton(self):
@@ -114,8 +117,8 @@ class gui():
         for widget in frame.winfo_children():
             widget.destroy()
     
-    
-    def printerNotConnected(self):
+    #-----If printer does not turn on
+    def printerNotOn(self):
         print("Im in printer does not turn on")
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
@@ -163,8 +166,8 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         # Instruct user to run self diagnostics test
-        self.addQuestion("""TO DO: 
-                             \nRun the XYZ test to asses motor issue:
+        self.addQuestion("""TO-DO breakdown: 
+                             \nRun the XYZ test to assess motor issue:
                              \nGo to Calibration -> Run XYZ test.
                              \nNote: make sure the cables in the back are not stuck.\n""", 'yellow')
         # Ask whether filament is inserted
@@ -180,7 +183,7 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         # Instruct user to purge filament
-        self.addQuestion("""TO DO:
+        self.addQuestion("""TO-DO breakdown:
                          \nInsert filament:
                          \nGo to Filament -> Load Filament.
                          \nKeep tension on the filament while gears are slowing moving filament into printer.
@@ -197,7 +200,7 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         # Instruct user to purge filament
-        self.addQuestion("""TO DO:
+        self.addQuestion("""TO-DO breakdown:
                          \nPurge filament to check for clogged hotend:
                          \nGo to Filament -> Purge Filament.
                          \nTo increase nozzle temperature:
@@ -214,8 +217,8 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         # Instruct user to purge filament
-        self.addQuestion("""TO DO:
-                         \nPerform first layer calibration:
+        self.addQuestion("""TO-DO breakdown:
+                         \nPerform first layer calibration like so:
                          \nGo to Calibration -> First Layer Calibration.
                          \nPrinter functionality test: find and print a Benchy.
                          \n Make sure first layer prints well before leaving it unattended.\n""", 'yellow')
@@ -224,7 +227,7 @@ class gui():
         print(self.question)
         # Add button frame below question
         self.createButtonFrame()
-        self.addYesNoButtons(self.endTroubleshoot,self.cleanBed)
+        self.addYesNoButtons(self.endTroubleshoot,self.cleanBed(self.layerCalibration))
 
     def extruderAndHotend(self):
         print("Im in Extruder and Hotend Issues")
@@ -232,11 +235,11 @@ class gui():
         self.buttons_frame.destroy()
         # Instruct user to purge filament
         self.addQuestion("""TO DO:
-                         \nClean extruder gears (where filament is inserted):
+                         \nClean extruder gears (where filament is inserted) like so:
                          \nUnscrew extruder motor and its covers to clean with a metal brush.\n""", 'yellow')
         self.addQuestion("""NEXT:
                          \nCleaning or Replacing Hotend: 
-                         \nThis process is one of teh most demanding and tedious.
+                         \nThis process is one of the most demanding and tedious.
                          \nScan QR code below for step by step breakdown\n""")
         # Add image of QR code
         qrCode = tk.PhotoImage(file="hotend_QRcode.png")
@@ -246,7 +249,7 @@ class gui():
         self.createButtonFrame()
         self.addContinueButton(self.endTroubleshoot)
 
-    def cleanBed(self):
+    def cleanBed(self,nextStep):
         print("Im in Clean Bed")
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
@@ -256,12 +259,12 @@ class gui():
                          \nEither use IPA wipes to remove grease and/or dirt.
                          \nor clean in sink using water and soap.
                          \nMake sure to dry bed before putting back in place.\n""", 'yellow')
-        self.addQuestion("Retry first layer calibration. Press Continue.\n",'black')
+        self.addQuestion("Press Continue.\n",'black')
         self.question = self.label['text']
         print(self.question)
         # Add button frame below question
         self.createButtonFrame()
-        self.addContinueButton(self.layerCalibration)
+        self.addContinueButton(nextStep)
 
     def endTroubleshoot(self):
         print("Im end of troubleshhot")
