@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import tkinter as tk
 import webbrowser
-
+from PIL import ImageTk, Image
 
 class gui():
     # static class variable of the background color
@@ -24,15 +24,18 @@ class gui():
                  "Bed": "Is the bed dirty?",
                  "Purge": "Purging?"}
 
+
+
     def __init__(self):
         self.masterWindow = tk.Tk() # create the tkinder object 
         self.masterWindow.title("Printer Troubleshooting Guide")
         # Set standard size of window
-        self.masterWindow.geometry("700x600+300+100")
+        self.masterWindow.geometry("800x700+300+10")
         self.masterWindow.configure(bg=gui.bgColor)
         # Add Exit button
         self.addExitButton()
         self.addLinkButton(self.openGeneral)
+        self.addExtraHelpButton()
         # Add text frame
         self.createTextFrame()  
         # Add intiial basic question text
@@ -45,7 +48,6 @@ class gui():
         # Create buttons, where parameters are the next stages in the flowchart
         self.addYesNoButtons(self.cleanBed,self.printerNotOn)
    
-
     def addExitButton(self):
         # create exit btn frameconda 
         self.bottomFrame = tk.Frame(self.masterWindow,bg=gui.bgColor)
@@ -55,10 +57,20 @@ class gui():
         self.exit_btn.pack(side=RIGHT, ipadx=10, ipady=10, padx=10, pady=10)
         self.masterWindow.protocol("WM_DELETE_WINDOW", self.quitWindow) 
 
-    def addLinkButton(self,browser,txt="GUIDES/HELP"):
+    def addLinkButton(self,browser,txt="Troubleshooting Guides"):
         self.helpBtn = tk.Button(master=self.bottomFrame,text= txt,fg='black',bg='#EEEE6A',anchor=CENTER,command=browser, font=(0))
         self.helpBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10) 
-        
+    
+    def addExtraHelpButton(self,msg="Maintenance Manuals",extruder=False):
+        if(extruder):
+            self.extraBtn = tk.Button(master=self.bottomFrame,command=self.openExtruder,text=msg,
+                                        fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
+            self.extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10)
+        else:
+            self.extraBtn = tk.Button(master=self.bottomFrame,command=self.openServiceManual,text=msg,
+                                        fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
+            self.extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10)
+
     def quitWindow(self):
         self.masterWindow.destroy() # close window
 
@@ -117,8 +129,7 @@ class gui():
     def addContinueButton(self,nextStage):
         self.continueBtn = tk.Button(master= self.buttons_frame,text= "Continue",fg= "black",anchor= CENTER, command= nextStage)
         self.continueBtn.pack(fill=BOTH,ipadx=10, ipady=10, padx=10, pady=10)
-
-    
+ 
         
     #---------------------------------Connection Troubleshooting----------------------------------#
     def printerNotOn(self):
@@ -168,7 +179,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openGeneral)
+        self.addExtraHelpButton()
         # Instruct user to purge filament
         self.addText("TO-DO: CLEAN the BED\n",'white')
         self.addText("""1) Remove bed from printer. 
@@ -186,7 +199,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openSelfTest,"Guide = Selftest")
+        self.addExtraHelpButton()
         # Instruct user to run self diagnostics test
         self.addText("TO-DO: RUN SELFTEST\n",'white')
         self.addText("""1) Either run entire Selftest (Go to Calibration -> Selftest)
@@ -204,7 +219,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openSelfTest,"Guide = Selftest")
+        self.addExtraHelpButton()
         # Instruct user to run self diagnostics test
         self.addText("SELFTEST FAILED\n",'white')
         self.addText("What instance of the self test failed?")
@@ -221,10 +238,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openSelfTest,"Guide = Selftest")
-        extraBtn = tk.Button(master=self.bottomFrame,command=self.openServiceManual,text="Maintenance-X/Y bearings (Consult Lead)",
-                             fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
-        extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10) 
+        self.addExtraHelpButton("Fix (X/Y) bearings-Consult Lead")
 
         # Instruct user to run self diagnostics test
         self.addText("XYZ-AXIS TEST FAILED\n",'white')
@@ -245,7 +261,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openSelfTest,"Guide = Selftest")
+        self.addExtraHelpButton("Fix Heaters-Consult Lead")
         # Instruct user to run self diagnostics test
         self.addText("Heater TEST FAILED\n",'white')
         self.addText("""1) Ensure the flexible steel sheet is on the bed.
@@ -256,16 +274,15 @@ class gui():
         Press Continue to go back to Running Selftest""")
         self.createButtonFrame()
         self.addContinueButton(self.runSelfTests)
-        extraBtn = tk.Button(master=self.bottomFrame,command=self.openServiceManual,text="Maintenance-Heaters (Consult Lead)",
-                             fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
-        extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10) 
 
     # NEED TO FINISH FINDING SOLUTION TO 2 BUTTON----------------------
     def fixFan(self):
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openSelfTest,"Guide = Selftest")
+        self.addExtraHelpButton("Fix FANs-Consult Lead")
         # Instruct user to run self diagnostics test
         self.addText("Fan TEST FAILED\n",'white')
         self.addText("""1) Verify if there is nothing blocking the rotation of the fans
@@ -277,17 +294,16 @@ class gui():
         Press Continue to go back to Running Selftest""")
         self.createButtonFrame()
         self.addContinueButton(self.runSelfTests)
-        extraBtn = tk.Button(master=self.bottomFrame,command=self.openServiceManual,text="Maintenance-FANs (Consult Lead)",
-                             fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
-        extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10)
-
 
 
     def selfTestPassed(self):
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
-        self.addLinkButton(self.openSelfTest,"Guide/Help")
+        self.extraBtn.destroy()
+        self.addLinkButton(self.openSelfTest)
+        self.addExtraHelpButton()
+
         # Instruct user to run self diagnostics test
         self.addText("SELFTEST PASSED SUCCESFULLY\n",'white')
         self.addText("""All phases of the selftest were passed. It's time to check the filament.""", 'yellow')
@@ -302,7 +318,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
-        self.addLinkButton(self.openGeneral, "General Troubleshooting")
+        self.extraBtn.destroy()
+        self.addLinkButton(self.openGeneral, "Guides/Help")
+        self.addExtraHelpButton()
         self.addText("TO-DO: LOAD FILAMENT\n",'white')
         self.addText("""1) Insert filament through sensor until you feel resistance.
                       \n2) Go to Filament -> Load Filament.
@@ -318,7 +336,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
-        self.addLinkButton(self.openGeneral, "General Troubleshooting")
+        self.extraBtn.destroy()
+        self.addLinkButton(self.openGeneral)
+        self.addExtraHelpButton()
         # Instruct user to purge filament
         self.addText("TO-DO: PURGE FILAMENT\n",'white')
         self.addText("""1) After loading filment, it should start purging.
@@ -336,7 +356,9 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
-        self.addLinkButton(self.openFirstLayer, "How to do First Layer Calibration")
+        self.extraBtn.destroy()
+        self.addLinkButton(self.openFirstLayer, "How to do First-Layer Calibration")
+        self.addExtraHelpButton("Manuals")
         self.addText("TO-DO: FIRST LAYER CALIBRATION\n",'white')
         self.addText("""1) Go to Calibration -> First Layer Calibration.
                       \n2) Follow instructions on display
@@ -349,16 +371,16 @@ class gui():
         self.createButtonFrame()
         self.addYesNoButtons(self.endTroubleshoot,self.cleanBed)
 
-    # NEED TO FINISH FINDING SOLUTION TO 2 BUTTON----------------------
+    # REDUCE SCALE OF QR CODE TO SEE CONTINUE BUTTON----------------------
     def extruderAndHotend(self):
         print("Im in Extruder and Hotend Issues")
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
+        self.extraBtn.destroy()
         self.addLinkButton(self.openHotend, "Clogged Hotend")
-        #extraBtn = tk.Button(master=self.bottomFrame,command=self.openExtruder,text="Extruder Pulley",
-        #                     fg='black',bg='#EEEE6A',anchor=CENTER,font=(0))
-        #extraBtn.pack(fill=BOTH,side=LEFT,ipadx=10, ipady=10, padx=10, pady=10)
+        self.addExtraHelpButton("Extruder Pulley",True)
+
         self.addText("TO-DO: CLEAN EXTRUDER GEARS and/or HOTEND",'white')
         self.addText("""1) Clean extruder gears/pulleys:
         2) Click on 'Clogged Hotend' button for detailed instructions.
@@ -367,9 +389,12 @@ class gui():
         This process is one of the most demanding and tedious.
         Scan QR code for step by step process.\n""")
         # Add image of QR code
-        qrCode = tk.PhotoImage(file="hotend_QRcode.png")
-        self.hotend_qrCode = tk.Label(master=self.txtFrame, image= qrCode, anchor= CENTER)
-        self.hotend_qrCode.pack()
+        self.hotend_guide = ImageTk.PhotoImage(Image.open("cloggedHotend_qrCode.png"))
+        self.hotendQRCode = tk.Label(master=self.txtFrame)
+        self.hotendQRCode.image = self.hotend_guide
+        self.hotendQRCode.configure(image=self.hotend_guide)
+        self.hotendQRCode.pack()
+
         self.addText("Press continue to retest.")
         self.createButtonFrame()
         self.addContinueButton(self.layerCalibration)
@@ -381,16 +406,22 @@ class gui():
         self.clearFrame(self.txtFrame)
         self.buttons_frame.destroy()
         self.helpBtn.destroy()
-        self.addLinkButton(self.openGeneral, "General Troubleshooting")
+        self.extraBtn.destroy()
+        self.addLinkButton(self.openGeneral)
+        self.addExtraHelpButton()
+        
         # Instruct user to purge filament
         self.addText("""This guide covered basic 3D printer maintenance.
         If you are yet unable to figure out and/or fix the issue:
         Go to Prusa Mini troubleshooting guide for more in-depth 
         printer issues and/or if fixing the printer has become stagnant.
-        Click on the 'GUIDE/HELP' button or scan QR code.\n""", 'yellow')
-        qrCode_guide = tk.PhotoImage(file="prusaMini_helpguide.png")
-        self.hotend_qrCode = tk.Label(master=self.txtFrame, image= qrCode_guide, anchor= CENTER)
-        self.hotend_qrCode.pack()
+        Click on the 'Troubleshoot' button or scan QR code.\n""", 'yellow')
+        # Add image of QR code
+        self.qrCode_guide = ImageTk.PhotoImage(Image.open("cloggedHotend_qrCode.png"))
+        self.general_qrCode = tk.Label(master=self.txtFrame)
+        self.general_qrCode.image = self.qrCode_guide
+        self.general_qrCode.configure(image=self.qrCode_guide)
+        self.general_qrCode.pack()
 
 if __name__ == "__main__":
     ui = gui()
